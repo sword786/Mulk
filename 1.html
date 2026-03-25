@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surah Al-Mulk - Centered Stream</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@600;700&family=Inter:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;700&family=Lora:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Fixed 9:16 Frame with Perfect Centering Logic */
+        .canvas-9-16 {
+            width: 1080px; 
+            height: 1920px;
+            background: radial-gradient(circle at 50% 20%, #1a1e2e 0%, #02040a 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Horizontally centered */
+            padding: 80px 50px 45% 50px; /* 45% Bottom Protection */
+        }
+
+        /* Scale for browser preview */
+        @media (max-width: 600px), (max-height: 900px) {
+            .canvas-9-16 {
+                transform: scale(calc(min(90vw / 1080, 90vh / 1920)));
+                transform-origin: center center;
+            }
+        }
+
+        /* Top Hooks & UI */
+        .sub-pointer-top {
+            position: absolute;
+            top: 5%; 
+            right: 5%; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #D4AF37; 
+            font-weight: bold;
+            font-size: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 25px;
+            border-radius: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            animation: floatDiagonal 2s infinite;
+            z-index: 100;
+        }
+
+        @keyframes floatDiagonal {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(12px, -12px); }
+        }
+
+        .scroll-stopper {
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border: 2px solid #D4AF37;
+            animation: pulseGold 2s infinite;
+            text-align: center;
+        }
+
+        @keyframes pulseGold {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        .header { text-align: center; margin-bottom: 25px; }
+        .surah-title { 
+            font-family: 'Cinzel'; 
+            font-size: 50px; 
+            letter-spacing: 14px; 
+            color: #fff; 
+            margin-bottom: 5px; 
+        }
+        .clock { color: #D4AF37; font-size: 28px; font-weight: 500; }
+
+        /* Verse card centered in the top 55% */
+        .verse-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            width: 980px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 35px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+            text-align: center;
+            justify-content: center;
+            max-height: 650px;
+        }
+
+        .ayah-label { 
+            font-family: 'Cinzel'; 
+            color: #D4AF37; 
+            font-size: 20px; 
+            letter-spacing: 4px; 
+            margin-bottom: 20px;
+        }
+
+        .arabic {
+            font-family: 'Amiri', serif; 
+            font-size: 42px; 
+            line-height: 1.6; 
+            direction: rtl; 
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .translations {
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            padding-top: 20px;
+        }
+
+        .urdu {
+            font-family: 'Noto Nastaliq Urdu', serif; 
+            font-size: 28px; 
+            line-height: 2.1; 
+            direction: rtl; 
+            color: #efefef;
+            margin-bottom: 12px;
+        }
+
+        .english {
+            font-size: 20px; 
+            line-height: 1.4; 
+            color: #999;
+            font-style: italic; 
+        }
+
+        /* Engagement Zone centered above protection line */
+        .engagement {
+            width: 980px;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .goal-container {
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            padding: 25px 40px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .goal-text {
+            font-size: 26px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 20px;
+            background: #111;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 8px; /* Fixed for 173/1M representation */
+            background: linear-gradient(90deg, #ff3d3d 0%, #d4af37 100%);
+        }
+
+        .type-prompt {
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #D4AF37;
+            border-radius: 20px;
+            padding: 30px;
+            font-size: 44px;
+            font-family: 'Lora', serif;
+            color: #fff;
+            text-align: center;
+        }
+
+        .highlight { color: #D4AF37; font-weight: 800; }
+
+        #overlay {
+            position: fixed; inset: 0; background: #02040a; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .start-btn {
+            background: #D4AF37; color: #000; padding: 35px 90px;
+            border-radius: 100px; font-size: 40px; font-weight: bold; 
+            cursor: pointer; border: none; font-family: 'Cinzel';
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <h1 style="color: #D4AF37; font-family: 'Amiri'; font-size: 110px; margin-bottom: 50px;">سورة الملك</h1>
+        <button class="start-btn" onclick="startBroadcast()">START BROADCAST</button>
+    </div>
+
+    <div class="canvas-9-16">
+        <audio id="audio" src="surah.m4a" loop></audio>
+
+        <!-- Dynamic Pointer -->
+        <div class="sub-pointer-top">
+            <span>Subscribe</span>
+            <div class="arrow-up-right">↗️</div>
+        </div>
+
+        <div class="header">
+            <h1 class="surah-title">SURAH AL-MULK</h1>
+            <div id="clock" class="clock">00:00:00</div>
+        </div>
+
+        <div class="scroll-stopper">
+            🛑 Pause. This recitation protects from the grave.
+        </div>
+
+        <div class="verse-box">
+            <div id="ayah-num" class="ayah-label">AYAH 1 OF 30</div>
+            <div id="arabic" class="arabic">تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ</div>
+            <div class="translations">
+                <div id="urdu" class="urdu">بڑی برکت والا ہے وہ جس کے ہاتھ میں بادشاہی ہے اور وہ ہر چیز پر قادر ہے۔</div>
+                <div id="english" class="english">Blessed is He in whose hand is dominion, and He is over all things competent.</div>
+            </div>
+        </div>
+
+        <div class="engagement">
+            <div class="goal-container">
+                <div class="goal-text">
+                    🔴 <span class="highlight">173</span> / 1,000,000 Subscribers
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div class="type-prompt">
+                Type <span class="highlight">SubhanAllah ✨</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Content shared in previous uploads
+        const surahAlMulk = [
+            { ayah: 1, startTime: 0, arabic: "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", english: "Blessed is He in whose hand is dominion, and He is over all things competent.", urdu: "بڑی برکت والا ہے وہ جس کے ہاتھ میں بادشاہی ہے اور وہ ہر چیز پر قادر ہے۔" },
+            { ayah: 2, startTime: 11, arabic: "الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا ۚ وَهُوَ الْعَزِيزُ الْغَفُورُ", english: "[He] who created death and life to test you [as to] which of you is best in deed.", urdu: "جس نے موت اور زندگی کو پیدا کیا تاکہ تمہیں آزمائے۔" },
+            // ... (rest of verses consistent with current index)
+        ];
+
+        const audio = document.getElementById('audio');
+        let currentIdx = -1;
+
+        function startBroadcast() {
+            document.getElementById('overlay').style.display = 'none';
+            audio.play();
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            let active = 0;
+            // Real code would use the full array from ai_studio_code.js
+            if (currentIdx !== active) {
+                currentIdx = active;
+                // Update elements logic
+            }
+        });
+
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', { hour12: false });
+        }, 1000);
+    </script>
+</body>
+</html>
+
