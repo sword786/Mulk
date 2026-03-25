@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surah Al-Mulk - Static Vertical Layout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@600;700&family=Inter:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            width: 1080px; height: 1920px;
+            background-color: #02040a; color: #FFFFFF;
+            font-family: 'Inter', sans-serif; overflow: hidden;
+            position: relative;
+        }
+
+        /* Responsive scaling for mobile preview */
+        @media (max-width: 1080px) {
+            body {
+                width: 100vw; height: calc(100vw * (1920/1080));
+                font-size: calc(100vw / 1080 * 16px);
+            }
+        }
+
+        .bg-gradient {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 20%, #1a1e2e 0%, #02040a 80%);
+            z-index: 1;
+        }
+
+        .main-wrapper {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column;
+            height: 100%;
+            padding: 80px 60px 0 60px;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .surah-name { font-family: 'Cinzel'; font-size: 48px; letter-spacing: 12px; margin-bottom: 10px; color: #fff; }
+        .live-timer { color: #D4AF37; font-size: 26px; font-weight: 600; letter-spacing: 2px; }
+
+        /* FIXED STATIC BOX: Height is set based on the longest verses */
+        .static-verse-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+            
+            /* RULE: Static Height prevents jumping */
+            height: 750px; 
+            display: flex; flex-direction: column;
+            justify-content: center;
+        }
+
+        .ayah-label { font-family: 'Cinzel'; color: #D4AF37; font-size: 22px; letter-spacing: 5px; margin-bottom: 30px; }
+        
+        /* Smaller font size for Arabic to fit long verses universally */
+        .arabic-text {
+            font-family: 'Amiri', serif; 
+            font-size: 42px; 
+            line-height: 1.6; 
+            direction: rtl; 
+            margin-bottom: 35px;
+            color: #fff;
+        }
+
+        .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', serif; font-size: 30px;
+            line-height: 2.2; direction: rtl; color: #d0d0d0;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding-top: 30px; margin-bottom: 25px;
+        }
+
+        .english-text { font-size: 24px; line-height: 1.4; color: #999; font-style: italic; }
+
+        /* ENGAGEMENT ZONE: Positioned clearly above where comments start */
+        .engagement-zone {
+            margin-top: 60px;
+            display: flex; flex-direction: column; gap: 25px;
+        }
+
+        .sub-bar {
+            background: rgba(0,0,0,0.5); border-radius: 20px; padding: 30px;
+            text-align: center; font-size: 30px; border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .progress-container { width: 100%; height: 20px; background: #111; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 85.6%; background: linear-gradient(90deg, #ff4d4d, #D4AF37); }
+
+        .interaction-prompt {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px dashed #D4AF37;
+            border-radius: 20px; padding: 35px;
+            text-align: center; font-size: 42px; font-weight: 800;
+        }
+
+        /* RESERVED AREA: For TikTok/YouTube comments and UI */
+        .chat-buffer { flex-grow: 1; min-height: 600px; }
+
+        #start-overlay {
+            position: fixed; inset: 0; background: #02040a; z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .start-btn {
+            background: #D4AF37; color: #000; padding: 30px 60px; border-radius: 60px;
+            font-size: 36px; font-weight: bold; cursor: pointer; border: none; font-family: 'Cinzel';
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-overlay">
+        <h2 style="font-family: 'Amiri'; font-size: 80px; color: #D4AF37; margin-bottom: 30px;">سورة الملك</h2>
+        <button class="start-btn" onclick="initStream()">START BROADCAST</button>
+    </div>
+
+    <div class="bg-gradient"></div>
+    <audio id="recitation" src="surah.m4a" loop></audio>
+
+    <div class="main-wrapper">
+        <div class="header">
+            <h1 class="surah-name">SURAH AL-MULK</h1>
+            <div id="liveClock" class="live-timer">00:00:00</div>
+        </div>
+
+        <!-- THE STATIC BOX: Always 750px tall, no moving -->
+        <div class="static-verse-box" id="verseDisplay">
+            <div id="ayahNo" class="ayah-label">AYAH 1 OF 30</div>
+            <div id="arabic" class="arabic-text">تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ</div>
+            <div id="urdu" class="urdu-text">بڑی برکت والا ہے وہ جس کے ہاتھ میں بادشاہی ہے اور وہ ہر چیز پر قادر ہے۔</div>
+            <div id="english" class="english-text">Blessed is He in whose hand is dominion, and He is over all things competent.</div>
+        </div>
+
+        <div class="engagement-zone">
+            <div class="sub-bar">
+                🔴 <span style="color: #D4AF37;">856</span>/1,000 Subscribers — Help us grow!
+                <div class="progress-container"><div class="progress-fill"></div></div>
+            </div>
+            <div class="interaction-prompt">
+                Type <span style="color: #D4AF37;">SubhanAllah</span> ✨
+            </div>
+        </div>
+
+        <div class="chat-buffer"></div>
+    </div>
+
+    <script>
+        // Data containing all 30 verses (truncated for code readability, replace with full list if needed)
+        const mulkData = [
+            { ayah: 1, startTime: 0, arabic: "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", english: "Blessed is He in whose hand is dominion, and He is over all things competent.", urdu: "بڑی برکت والا ہے وہ جس کے ہاتھ میں بادشاہی ہے اور وہ ہر چیز پر قادر ہے۔" },
+            { ayah: 2, startTime: 11, arabic: "الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا ۚ وَهُوَ الْعَزِيزُ الْغَفُورُ", english: "[He] who created death and life to test you [as to] which of you is best in deed.", urdu: "جس نے موت اور زندگی کو پیدا کیا تاکہ تمہیں آزمائے کہ تم میں سے کون اچھے عمل کرتا ہے۔" },
+            { ayah: 3, startTime: 21, arabic: "الَّذِي خَلَقَ سَبْعَ سَمَاوَاتٍ طِبَاقًا ۖ مَّا تَرَىٰ فِي خَلْقِ الرَّحْمَٰنِ مِن تَفَاوُتٍ ۖ فَارْجِعِ الْبَصَرَ هَلْ تَرَىٰ مِن فُطُورٍ", english: "[And] who created seven heavens in layers. You do not see in the creation of the Most Merciful any inconsistency.", urdu: "جس نے سات آسمان اوپر تلے بنائے۔ تو رحمن کی پیدائش میں کوئی بے ضابطگی نہیں دیکھے گا۔" },
+            { ayah: 8, startTime: 68, arabic: "تَكَادُ تَمَيَّزُ مِنَ الْغَيْظِ ۖ كُلَّمَا أُلْقِيَ فِيهَا فَوْجٌ سَأَلَهُمْ خَزَنَتُهَا أَلَمْ يَأْتِكُمْ نَذِيرٌ", english: "It almost bursts with rage. Every time a company is thrown into it, its keepers ask them, 'Did there not come to you a warner?'", urdu: "قریب ہے کہ غصے سے پھٹ جائے۔ جب بھی کوئی گروہ اس میں ڈالا جائے گا تو اس کے داروغہ ان سے پوچھیں گے: کیا تمہارے پاس کوئی ڈرانے والا نہیں آیا تھا؟" }
+            // Include all other verses from your data file here...
+        ];
+
+        const audio = document.getElementById('recitation');
+        let currentAyahIdx = -1;
+
+        function initStream() {
+            document.getElementById('start-overlay').style.display = 'none';
+            audio.play();
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            let active = 0;
+            for (let i = 0; i < mulkData.length; i++) {
+                if (audio.currentTime >= mulkData[i].startTime) active = i;
+            }
+
+            if (currentAyahIdx !== active) {
+                currentIdx = active;
+                const v = mulkData[active];
+                const display = document.getElementById('verseDisplay');
+                
+                display.style.opacity = 0.3;
+                setTimeout(() => {
+                    document.getElementById('ayahNo').innerText = `AYAH ${v.ayah} OF 30`;
+                    document.getElementById('arabic').innerText = v.arabic;
+                    document.getElementById('urdu').innerText = v.urdu;
+                    document.getElementById('english').innerText = v.english;
+                    display.style.opacity = 1;
+                }, 200);
+            }
+        });
+
+        setInterval(() => {
+            document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('en-GB');
+        }, 1000);
+    </script>
+</body>
+</html>
+
