@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surah Al-Mulk - Stream Optimized</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@600;700&family=Inter:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            width: 1080px; height: 1920px;
+            background-color: #04060f; color: #FFFFFF;
+            font-family: 'Inter', sans-serif; overflow: hidden;
+            position: relative;
+        }
+
+        /* Scaling for different screens */
+        @media (max-width: 1080px) {
+            body {
+                width: 100vw; height: calc(100vw * (1920/1080));
+                font-size: calc(100vw / 1080 * 16px);
+            }
+        }
+
+        .bg-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 25%, #161a29 0%, #04060f 70%);
+            z-index: 1;
+        }
+
+        .main-container {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column;
+            height: 100%;
+            padding: 100px 60px 0 60px;
+        }
+
+        /* HEADER: Tightened spacing */
+        .header {
+            text-align: center; margin-bottom: 30px;
+        }
+        .live-tag {
+            display: inline-flex; align-items: center; gap: 10px;
+            color: #ff4d4d; font-weight: bold; font-size: 22px;
+            border: 2px solid #ff4d4d; padding: 4px 12px; border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* VERSE BOX: Compacted and moved up */
+        .verse-box {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .ayah-tag { font-family: 'Cinzel'; color: #D4AF37; font-size: 20px; letter-spacing: 5px; margin-bottom: 20px; }
+        
+        /* Reduced Arabic size to fit better */
+        .arabic {
+            font-family: 'Amiri', serif; font-size: 64px; 
+            line-height: 1.5; direction: rtl; margin-bottom: 30px;
+        }
+
+        .urdu {
+            font-family: 'Noto Nastaliq Urdu', serif; font-size: 34px;
+            line-height: 2.0; direction: rtl; color: #e0e0e0;
+            margin-bottom: 20px; border-top: 1px solid rgba(212, 175, 55, 0.15); padding-top: 20px;
+        }
+
+        .english { font-size: 26px; line-height: 1.4; color: #bbb; font-style: italic; }
+
+        /* ENGAGEMENT ZONE: Moved up to sit above comments */
+        .engagement-zone {
+            margin-top: 80px; /* Gap between verse box and engagement */
+            display: flex; flex-direction: column; gap: 30px;
+        }
+
+        .sub-goal {
+            background: rgba(0,0,0,0.4); border-radius: 20px; padding: 25px;
+            text-align: center; font-size: 28px; border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .progress-bg { width: 100%; height: 20px; background: #1a1a1a; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 85.6%; background: linear-gradient(90deg, #ff4d4d, #D4AF37); }
+
+        .chat-prompt {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px dashed #D4AF37;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            font-size: 38px;
+            font-weight: 700;
+        }
+
+        /* Empty space for TikTok UI/Comments */
+        .comment-buffer { height: 600px; }
+
+        #overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #04060f; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .start-btn {
+            background: #D4AF37; border: none; padding: 25px 50px;
+            border-radius: 50px; font-size: 32px; font-weight: bold; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <button class="start-btn" onclick="start()">START LIVE STREAM</button>
+    </div>
+
+    <div class="bg-layer"></div>
+
+    <audio id="quranAudio" src="surah.m4a" loop></audio>
+
+    <div class="main-container">
+        <!-- TOP: Title and Logic -->
+        <div class="header">
+            <div class="live-tag">LIVE</div>
+            <h1 style="font-family: 'Cinzel'; font-size: 44px; letter-spacing: 8px;">SURAH AL-MULK</h1>
+            <p id="clock" style="color: #D4AF37; font-size: 24px; margin-top: 5px;">00:00:00</p>
+        </div>
+
+        <!-- MIDDLE-TOP: Condensed Verse Display -->
+        <div class="verse-box" id="verseBox">
+            <div id="ayahNumber" class="ayah-tag">AYAH 1 OF 30</div>
+            <div id="arabicText" class="arabic">تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ</div>
+            <div id="urduText" class="urdu">بڑی برکت والا ہے وہ جس کے ہاتھ میں بادشاہی ہے اور وہ ہر چیز پر قادر ہے۔</div>
+            <div id="englishText" class="english">Blessed is He in whose hand is dominion, and He is over all things competent.</div>
+        </div>
+
+        <!-- MIDDLE-BOTTOM: Interaction bars (above comments) -->
+        <div class="engagement-zone">
+            <div class="sub-goal">
+                🔴 <span style="color: #D4AF37;">856</span>/1,000 Subscribers — Help us reach the goal!
+                <div class="progress-bg"><div class="progress-fill"></div></div>
+            </div>
+            <div class="chat-prompt">
+                Type <span style="color: #D4AF37;">SubhanAllah</span> ✨
+            </div>
+        </div>
+
+        <!-- BOTTOM: Spacer to keep everything above TikTok comments -->
+        <div class="comment-buffer"></div>
+    </div>
+
+    <script>
+        const surahData = [
+            { ayah: 1, startTime: 0, arabic: "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", english: "Blessed is He in whose hand is dominion, and He is over all things competent.", urdu: "بڑی برکت والا ہے وہ جس کے ہاتھ میں بادشاہی ہے اور وہ ہر چیز پر قادر ہے۔" },
+            { ayah: 2, startTime: 11, arabic: "الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا ۚ وَهُوَ الْعَزِيزُ الْغَفُورُ", english: "[He] who created death and life to test you [as to] which of you is best in deed.", urdu: "جس نے موت اور زندگی کو پیدا کیا تاکہ تمہیں آزمائے کہ تم میں سے کون اچھے عمل کرتا ہے۔" },
+            { ayah: 3, startTime: 21, arabic: "الَّذِي خَلَقَ سَبْعَ سَمَاوَاتٍ طِبَاقًا...", english: "He who created seven heavens in layers.", urdu: "جس نے سات آسمان اوپر تلے بنائے۔" },
+            { ayah: 4, startTime: 34, arabic: "ثُمَّ ارْجِعِ الْبَصَرَ كَرَّتَيْنِ...", english: "Then return your vision twice again.", urdu: "پھر بار بار نگاہ دوڑا۔" },
+            // ... (Add your other verses here)
+            { ayah: 30, startTime: 310, arabic: "قُلْ أَرَأَيْتُمْ إِنْ أَصْبَحَ مَاؤُكُمْ غَوْرًا...", english: "If your water becomes sunken, who can bring you flowing water?", urdu: "اگر تمہارا پانی زمین میں خشک ہو جائے تو کون پانی لائے گا؟" }
+        ];
+
+        const audio = document.getElementById('quranAudio');
+        let currentAyah = -1;
+
+        function start() {
+            document.getElementById('overlay').style.display = 'none';
+            audio.play();
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            let active = 0;
+            for (let i = 0; i < surahData.length; i++) {
+                if (audio.currentTime >= surahData[i].startTime) active = i;
+            }
+
+            if (currentAyah !== active) {
+                currentAyah = active;
+                const data = surahData[active];
+                const box = document.getElementById('verseBox');
+                
+                box.style.opacity = 0.5;
+                setTimeout(() => {
+                    document.getElementById('ayahNumber').innerText = `AYAH ${data.ayah} OF 30`;
+                    document.getElementById('arabicText').innerText = data.arabic;
+                    document.getElementById('urduText').innerText = data.urdu;
+                    document.getElementById('englishText').innerText = data.english;
+                    box.style.opacity = 1;
+                }, 200);
+            }
+        });
+
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB');
+        }, 1000);
+    </script>
+</body>
+</html>
+
+  
