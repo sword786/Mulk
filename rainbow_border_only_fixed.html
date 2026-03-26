@@ -1,0 +1,76 @@
+
+<style>
+  .dash {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    min-height: 340px;
+  }
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+  @keyframes spin {
+    to { --angle: 360deg; }
+  }
+  .btn-wrap {
+    position: relative;
+    display: inline-flex;
+    border-radius: 999px;
+    padding: 3px;
+    background: conic-gradient(from var(--angle), #ff0000, #ff6600, #ffff00, #00ee00, #0099ff, #cc00ff, #ff0099, #ff0000);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    animation: spin 2s linear infinite;
+    pointer-events: none;
+  }
+  .btn-outer {
+    position: relative;
+    display: inline-flex;
+    border-radius: 999px;
+  }
+  .btn-outer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    padding: 3px;
+    background: conic-gradient(from var(--angle), #ff0000, #ff6600, #ffff00, #00ee00, #0099ff, #cc00ff, #ff0099, #ff0000);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    animation: spin 2s linear infinite;
+  }
+  .inner {
+    background: transparent;
+    border-radius: 999px;
+    padding: 11px 28px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: sans-serif;
+    color: var(--color-text-primary);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+<div class="dash">
+  <div class="btn-outer">
+    <button class="inner">Subscribe</button>
+  </div>
+
+  <div class="btn-outer">
+    <button class="inner" style="display:flex;align-items:center;gap:6px;">
+      👍 41K &nbsp;|&nbsp; 👎
+    </button>
+  </div>
+</div>
