@@ -1,0 +1,166 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: transparent !important; }
+
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+  @keyframes spin { to { --angle: 360deg; } }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 28px;
+    padding: 2rem;
+    background: transparent;
+  }
+
+  .resize-box {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 50px;
+    min-width: 80px;
+    min-height: 30px;
+    border-radius: 999px;
+  }
+  .resize-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: conic-gradient(from var(--angle), #ff0000, #ff6600, #ffff00, #00ee00, #0099ff, #cc00ff, #ff0099, #ff0000);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    padding: 3px;
+    animation: spin 2s linear infinite;
+    pointer-events: none;
+  }
+  .sub-text {
+    font-family: sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: 15px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    pointer-events: none;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .panel {
+    background: rgba(0,0,0,0.75);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 320px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lbl {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #ccc;
+    width: 90px;
+    flex-shrink: 0;
+  }
+  input[type=range] {
+    flex: 1;
+    accent-color: #fff;
+  }
+  .val {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #fff;
+    width: 44px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+</style>
+
+<div class="page">
+  <div class="resize-box" id="box">
+    <span class="sub-text" id="btnText">Subscribe</span>
+  </div>
+
+  <div class="panel">
+    <div class="row">
+      <span class="lbl">Width</span>
+      <input type="range" min="80" max="560" value="160" id="wSlider" step="1">
+      <span class="val" id="wVal">160px</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Height</span>
+      <input type="range" min="30" max="180" value="50" id="hSlider" step="1">
+      <span class="val" id="hVal">50px</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Border size</span>
+      <input type="range" min="1" max="14" value="3" id="bSlider" step="1">
+      <span class="val" id="bVal">3px</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Speed</span>
+      <input type="range" min="3" max="60" value="20" id="sSlider" step="1">
+      <span class="val" id="sVal">2.0s</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Font size</span>
+      <input type="range" min="8" max="48" value="15" id="fSlider" step="1">
+      <span class="val" id="fVal">15px</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const box = document.getElementById('box');
+  const btnText = document.getElementById('btnText');
+
+  function setBorderPad(v) {
+    let s = document.getElementById('ds');
+    if (!s) { s = document.createElement('style'); s.id = 'ds'; document.head.appendChild(s); }
+    s.textContent = `.resize-box::before { padding: ${v}px !important; }`;
+  }
+
+  function setSpeed(v) {
+    const secs = (v / 10).toFixed(1);
+    let s = document.getElementById('ss');
+    if (!s) { s = document.createElement('style'); s.id = 'ss'; document.head.appendChild(s); }
+    s.textContent = `.resize-box::before { animation-duration: ${secs}s !important; }`;
+    return secs;
+  }
+
+  document.getElementById('wSlider').addEventListener('input', e => {
+    box.style.width = e.target.value + 'px';
+    document.getElementById('wVal').textContent = e.target.value + 'px';
+  });
+  document.getElementById('hSlider').addEventListener('input', e => {
+    box.style.height = e.target.value + 'px';
+    document.getElementById('hVal').textContent = e.target.value + 'px';
+  });
+  document.getElementById('bSlider').addEventListener('input', e => {
+    setBorderPad(e.target.value);
+    document.getElementById('bVal').textContent = e.target.value + 'px';
+  });
+  document.getElementById('sSlider').addEventListener('input', e => {
+    const secs = setSpeed(e.target.value);
+    document.getElementById('sVal').textContent = secs + 's';
+  });
+  document.getElementById('fSlider').addEventListener('input', e => {
+    btnText.style.fontSize = e.target.value + 'px';
+    document.getElementById('fVal').textContent = e.target.value + 'px';
+  });
+</script>
