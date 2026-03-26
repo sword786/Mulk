@@ -1,0 +1,62 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+  @keyframes spin { to { --angle: 360deg; } }
+
+  .canvas {
+    width: 360px;
+    height: 640px;
+    background: transparent;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .sub-outer {
+    position: absolute;
+    top: 42px;
+    right: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #fff;
+    width: 100px;
+    height: 34px;
+  }
+  .sub-outer::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 999px;
+    background: conic-gradient(from var(--angle), #ff0000, #ff6600, #ffff00, #00ee00, #0099ff, #cc00ff, #ff0099, #ff0000);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    padding: 4px;
+    animation: spin 5s linear infinite;
+    pointer-events: none;
+  }
+  .sub-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    font-family: sans-serif;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+<div class="canvas">
+  <div class="sub-outer">
+    <span class="sub-text">Subscribe</span>
+  </div>
+</div>
